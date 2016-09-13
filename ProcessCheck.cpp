@@ -43,3 +43,14 @@ DWORD ProcessCheck::GetProcessId(
 
 	return 0;
 }
+
+bool ProcessCheck::IterateVector() {
+	for (auto& proc : ToCheck) {
+		DWORD tempCheck = GetProcessId(TEXT(proc));
+		if (tempCheck) {
+			std::cout << "JUAN MAIK JUAN WATER U DOIN" << std::endl;
+			ShellExecute(0, 0, "https://www.youtube.com/watch?v=PD6AfcoG4o8", 0, 0, SW_SHOW);
+		}
+	}
+	return true;
+}
