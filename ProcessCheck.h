@@ -2,10 +2,10 @@
 #include <tchar.h>
 #include <TlHelp32.h>
 
-#ifndef WINDOWCHECKS_H
-#define WINDOWCHECKS_H
+#ifndef PROCESSCHECKS_H
+#define PROCESSCHECKS_H
 
-class WindowCheck {
+class ProcessCheck {
 protected:
 	HANDLE ProcessHandle = NULL;
 	DWORD pId = NULL;

@@ -1,8 +1,8 @@
-#include "WindowChecks.h"
+#include "ProcessCheck.h"
 #include <Windows.h>
 
 // Yes or no on this formatting? I'm unsure :/
-DWORD WindowCheck::GetProcessId(
+DWORD ProcessCheck::GetProcessId(
 	LPCTSTR pName
 ) {
 	PROCESSENTRY32 pe32 = { 0 };
