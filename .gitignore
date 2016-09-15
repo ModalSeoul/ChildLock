@@ -2,3 +2,7 @@ Debug/
 *.vcxproj.filters
 ReadMe.txt
 ~AutoRecover*
+*.openbd
+*.opensdf
+*.VC.opendb
+*.VC.db

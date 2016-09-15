@@ -25,7 +25,7 @@ DWORD ProcessCheck::GetProcessId(
 	do {
 #ifdef UNICODE
 		// Storing pId in header declared DWORD & returning
-		if (!lstrcmpiW(pe32.szExeFile, pName)) {
+		if (!lstrcmpiW(pe32.szExeFile, pName)) {3
 			pId = pe32.th32ProcessID;
 			return pId;
 	}

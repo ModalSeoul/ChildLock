@@ -152,11 +152,13 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="UserProfile.h" />
+    <ClInclude Include="ProcessCheck.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChildLock.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="UserProfile.cpp" />
+    <ClCompile Include="ProcessCheck.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
