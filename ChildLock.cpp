@@ -11,6 +11,7 @@ int main()
 {
 	c_UserProfile.CheckChild();
 	DWORD IsRunning = c_ProcessCheck.GetProcessId(TEXT("explorer.exe"));
+	c_ProcessCheck.EnumerateSnapshot();
 	c_ProcessCheck.IterateVector();
 	if (IsRunning)
 		cout << "Badboy found: " << IsRunning << endl;

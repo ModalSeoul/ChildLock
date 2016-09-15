@@ -11,6 +11,10 @@ class ProcessCheck {
 protected:
 	HANDLE ProcessHandle = NULL;
 	DWORD pId = NULL;
+	HANDLE Snapshot = NULL;
+	HANDLE ModuleSnap = INVALID_HANDLE_VALUE;
+	MODULEENTRY32 me32;
+	PROCESSENTRY32 pe32 = { 0 };
 
 	// Known third party applications
 	std::vector<LPCTSTR> ToCheck = {
@@ -23,6 +27,8 @@ protected:
 
 public:
 	DWORD GetProcessId(LPCTSTR);
+	bool EnumerateModules(DWORD);
+	bool EnumerateSnapshot();
 	bool IterateVector();
 
 };
