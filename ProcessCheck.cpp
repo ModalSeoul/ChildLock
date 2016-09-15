@@ -1,6 +1,8 @@
 #include "ProcessCheck.h"
 #include <Windows.h>
 
+void printError(TCHAR* msg);
+
 // Yes or no on this formatting? I'm unsure :/
 DWORD ProcessCheck::GetProcessId(
 	LPCTSTR pName
@@ -71,16 +73,19 @@ bool ProcessCheck::EnumerateSnapshot() {
 	return true;
 }
 
+
+// This returns this(http://i.imgur.com/qqfaDdk.png)
 bool ProcessCheck::EnumerateModules(DWORD pId) {
 	ModuleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, pId);
+
 	if (ModuleSnap == INVALID_HANDLE_VALUE) {
-		std::cout << "line 76" << std::endl;
+		printError(TEXT("CreateToolhelp32Snapshot (of modules)"));
 		return false;
 	}
 
 	me32.dwSize = sizeof(MODULEENTRY32);
 	if (!Module32First(ModuleSnap, &me32)) {
-		std::cout << "line 81" << std::endl;
+		printError(TEXT("Module32First"));  // show cause of failure
 		return false;
 	}
 
@@ -95,3 +100,28 @@ bool ProcessCheck::EnumerateModules(DWORD pId) {
 	} while (Module32Next(ModuleSnap, &me32));
 	return true;
 }
+
+
+void printError(TCHAR* msg)
+{
+	DWORD eNum;
+	TCHAR sysMsg[256];
+	TCHAR* p;
+
+	eNum = GetLastError();
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL, eNum,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
+		sysMsg, 256, NULL);
+
+	// Trim the end of the line and terminate it with a null
+	p = sysMsg;
+	while ((*p > 31) || (*p == 9))
+		++p;
+	do { *p-- = 0; } while ((p >= sysMsg) &&
+		((*p == '.') || (*p < 33)));
+
+	// Display the message
+	_tprintf(TEXT("\n  WARNING: %s failed with error %d (%s)"), msg, eNum, sysMsg);
+}
+

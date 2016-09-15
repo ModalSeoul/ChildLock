@@ -10,7 +10,7 @@ ProcessCheck c_ProcessCheck;
 int main()
 {
 	c_UserProfile.CheckChild();
-	DWORD IsRunning = c_ProcessCheck.GetProcessId(TEXT("explorer.exe"));
+	DWORD IsRunning = c_ProcessCheck.GetProcessId(TEXT("Launcher.exe"));
 	c_ProcessCheck.EnumerateSnapshot();
 	c_ProcessCheck.IterateVector();
 	if (IsRunning)
