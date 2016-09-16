@@ -1,9 +1,10 @@
 #include "ProcessCheck.h"
 #include <Windows.h>
+#include <fstream>
 
 void printError(TCHAR* msg);
 
-// Yes or no on this formatting? I'm unsure :/
+// Yes or no on this formatting? I'm unsure :|
 DWORD ProcessCheck::GetProcessId(
 	LPCTSTR pName
 ) {
@@ -49,27 +50,26 @@ bool ProcessCheck::IterateVector() {
 	for (auto& proc : ToCheck) {
 		DWORD tempCheck = GetProcessId(TEXT(proc));
 		if (tempCheck) {
-			std::cout << "\nJUAN MAIK JUAN WATER U DOIN\n" << std::endl;
-			//ShellExecute(0, 0, "https://www.youtube.com/watch?v=PD6AfcoG4o8", 0, 0, SW_SHOW);
+			// TODO: This dude's running a process we dun like
 			return true;
 		}
 	}
-	// Only hit if return below ShellExecute isn't hit
+	// Only hit if return above isn't hit
 	return false;
 }
 
 bool ProcessCheck::EnumerateSnapshot() {
 	if (!Process32First(Snapshot, &pe32)) {
 		std::cout << "Failed, line 61(debug str)" << std::endl;
-		CloseHandle(Snapshot);
+		return false; // Previously closing handle
 	}
 
-	//do {
-	//	_tprintf(TEXT("\n  Process ID        = 0x%08X"), pe32.th32ProcessID);
-	//	_tprintf(TEXT("\n  Thread count      = %d"), pe32.cntThreads);
-	//	_tprintf(TEXT("\n  Parent process ID = %0x%08X"), pe32.th32ParentProcessID);
-	//	_tprintf(TEXT("\n  Priority base     = %d"), pe32.pcPriClassBase);
-	//} while (Process32Next(Snapshot, &pe32));
+	do {
+		_tprintf(TEXT("\n  Process ID        = 0x%08X"), pe32.th32ProcessID);
+		_tprintf(TEXT("\n  Thread count      = %d"), pe32.cntThreads);
+		_tprintf(TEXT("\n  Parent process ID = %0x%08X"), pe32.th32ParentProcessID);
+		_tprintf(TEXT("\n  Priority base     = %d"), pe32.pcPriClassBase);
+	} while (Process32Next(Snapshot, &pe32));
 	return true;
 }
 
@@ -90,7 +90,7 @@ bool ProcessCheck::EnumerateModules(DWORD pId) {
 	}
 
 	do {
-		_tprintf(TEXT("\n\n		MODULE NAME:	%s"), me32.szModule);
+		_tprintf(TEXT("\n\n	  MODULE NAME:	%s"), me32.szModule);
 		_tprintf(TEXT("\n     Executable     = %s"), me32.szExePath);
 		_tprintf(TEXT("\n     Process ID     = 0x%08X"), me32.th32ProcessID);
 		_tprintf(TEXT("\n     Ref count (g)  = 0x%04X"), me32.GlblcntUsage);
@@ -102,8 +102,7 @@ bool ProcessCheck::EnumerateModules(DWORD pId) {
 }
 
 
-void printError(TCHAR* msg)
-{
+void printError(TCHAR* msg) {
 	DWORD eNum;
 	TCHAR sysMsg[256];
 	TCHAR* p;
