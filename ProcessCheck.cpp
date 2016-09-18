@@ -1,22 +1,27 @@
 #include "ProcessCheck.h"
 #include <Windows.h>
+#include <stdio.h>
+#include <tchar.h>
+#include <Psapi.h>
 #include <fstream>
 
 void printError(TCHAR* msg);
+
+
+void ProcessCheck::SetSnapshot() {
+	// Create quick 'snapshot' of process list
+	Snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	// Grabbing the size of processes
+	pe32.dwSize = sizeof(PROCESSENTRY32);
+}
 
 // Yes or no on this formatting? I'm unsure :|
 DWORD ProcessCheck::GetProcessId(
 	LPCTSTR pName
 ) {
-	// Create quick 'snapshot' of process list
-	Snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-	
 	// Check CreateToolhelp call success
 	if (Snapshot == INVALID_HANDLE_VALUE)
-		return 0;
-	
-	// Grabbing the size of processes
-	pe32.dwSize = sizeof(PROCESSENTRY32);
+		SetSnapshot();
 
 	if (!Process32First(Snapshot, &pe32)) {
 		CloseHandle(Snapshot);
@@ -61,14 +66,16 @@ bool ProcessCheck::IterateVector() {
 bool ProcessCheck::EnumerateSnapshot() {
 	if (!Process32First(Snapshot, &pe32)) {
 		std::cout << "Failed, line 61(debug str)" << std::endl;
+		std::cout << GetLastError() << std::endl;
 		return false; // Previously closing handle
 	}
 
 	do {
-		_tprintf(TEXT("\n  Process ID        = 0x%08X"), pe32.th32ProcessID);
-		_tprintf(TEXT("\n  Thread count      = %d"), pe32.cntThreads);
-		_tprintf(TEXT("\n  Parent process ID = %0x%08X"), pe32.th32ParentProcessID);
-		_tprintf(TEXT("\n  Priority base     = %d"), pe32.pcPriClassBase);
+		PushSnapshot(pe32.th32ProcessID);
+		//_tprintf(TEXT("\n  Process ID        = 0x%08X"), pe32.th32ProcessID);
+		//_tprintf(TEXT("\n  Thread count      = %d"), pe32.cntThreads);
+		//_tprintf(TEXT("\n  Parent process ID = %0x%08X"), pe32.th32ParentProcessID);
+		//_tprintf(TEXT("\n  Priority base     = %d"), pe32.pcPriClassBase);
 	} while (Process32Next(Snapshot, &pe32));
 	return true;
 }
@@ -101,6 +108,36 @@ bool ProcessCheck::EnumerateModules(DWORD pId) {
 	return true;
 }
 
+void ProcessCheck::HandleCount() {
+	DWORD szBuffer = NULL;
+	GetProcessHandleCount(selfHandle, &szBuffer);
+	if (!szBuffer == NULL)
+		if (!check.PCount == szBuffer) {
+			check.PCount = szBuffer;
+			// TODO: CALL CHECK
+		}
+}
+
+void ProcessCheck::PushSnapshot(DWORD pId) {
+	TCHAR szName[MAX_PATH] = TEXT("<unrecognized>");
+	HANDLE hProc = OpenProcess(PROCESS_QUERY_INFORMATION |
+		PROCESS_VM_READ,
+		FALSE, pId);
+
+	if (NULL != hProc) {
+		HMODULE hMod;
+		DWORD cbNeeded;
+		if (EnumProcessModules(hProc, &hMod, sizeof(hMod),
+			&cbNeeded))
+		{
+			GetModuleBaseName(hProc, hMod, 
+				szName, sizeof(szName) / sizeof(TCHAR));
+		}
+	}
+	_tprintf(TEXT("%s (PID: %u)\n"), szName, pId);
+	PSnapshot.push_back(szName);
+	CloseHandle(hProc);
+}
 
 void printError(TCHAR* msg) {
 	DWORD eNum;

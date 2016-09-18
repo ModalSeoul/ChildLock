@@ -16,6 +16,10 @@ protected:
 	MODULEENTRY32 me32;
 	PROCESSENTRY32 pe32 = { 0 };
 
+	struct HandleCheck {
+		std::vector<char*> PSnapshot;
+		int PCount;
+	};
 	// Known third party applications
 	std::vector<LPCTSTR> ToCheck = {
 		"explorer.exe",
@@ -24,12 +28,16 @@ protected:
 		"thebestrat.exe",
 		"hitbox.exe"
 	};
+	HANDLE selfHandle = GetCurrentProcess();
 
 public:
+	ProcessCheck::HandleCheck check;
 	DWORD GetProcessId(LPCTSTR);
 	bool EnumerateModules(DWORD);
 	bool EnumerateSnapshot();
 	bool IterateVector();
-
+	void HandleCount();
+	void PushSnapshot(DWORD);
+	void SetSnapshot();
 };
 #endif

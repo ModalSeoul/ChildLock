@@ -4,17 +4,14 @@
 #include <iostream>
 #include <Windows.h>
 
-UserProfile c_UserProfile;
-ProcessCheck c_ProcessCheck;
+UserProfile ZUser;
+ProcessCheck ZProcess;
 
 int main()
 {
-	c_UserProfile.CheckChild();
-	DWORD IsRunning = c_ProcessCheck.GetProcessId(TEXT("Launcher.exe"));
-	if (IsRunning)
-		cout << "Badboy found: " << IsRunning << endl;
-	int n;
-	std::cin >> n;
+	ZProcess.SetSnapshot();
+	ZProcess.EnumerateSnapshot();
+	std::cin.ignore();
 	return 0;
 }
 
