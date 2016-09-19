@@ -1,5 +1,5 @@
 #include "ProcessCheck.h"
-#include <Windows.h>
+#include <afxwin.h>
 #include <stdio.h>
 #include <tchar.h>
 #include <Psapi.h>
@@ -108,17 +108,23 @@ bool ProcessCheck::EnumerateModules(DWORD pId) {
 	return true;
 }
 
-void ProcessCheck::HandleCount() {
+void ProcessCheck::CheckHandleCount() {
 	DWORD szBuffer = NULL;
-	GetProcessHandleCount(selfHandle, &szBuffer);
+	GetProcessHandleCount(GetCurrentProcess(), &szBuffer);
+	std::cout << "\nPreviously: " << check.PCount << "\nNow: " << szBuffer;
+
 	if (!szBuffer == NULL)
 		if (!check.PCount == szBuffer) {
-			check.PCount = szBuffer;
-			// TODO: CALL CHECK
+			
+			check.PCount = szBuffer;	// Update PCount 
+			SetSnapshot();				// Reset process snapshot
+			do {
+				check.NSnapshot.push_back((char*)pe32.th32ProcessID);
+			} while (Process32Next(Snapshot, &pe32));
 		}
 }
 
-void ProcessCheck::PushSnapshot(DWORD pId) {
+TCHAR* ProcessCheck::GetProcessName(DWORD pId) {
 	TCHAR szName[MAX_PATH] = TEXT("<unrecognized>");
 	HANDLE hProc = OpenProcess(PROCESS_QUERY_INFORMATION |
 		PROCESS_VM_READ,
@@ -130,13 +136,11 @@ void ProcessCheck::PushSnapshot(DWORD pId) {
 		if (EnumProcessModules(hProc, &hMod, sizeof(hMod),
 			&cbNeeded))
 		{
-			GetModuleBaseName(hProc, hMod, 
+			GetModuleBaseName(hProc, hMod,
 				szName, sizeof(szName) / sizeof(TCHAR));
 		}
 	}
-	_tprintf(TEXT("%s (PID: %u)\n"), szName, pId);
-	PSnapshot.push_back(szName);
-	CloseHandle(hProc);
+	return szName;
 }
 
 void printError(TCHAR* msg) {

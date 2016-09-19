@@ -1,4 +1,4 @@
-#include <Windows.h>
+#include <afxwin.h>
 #include <tchar.h>
 #include <TlHelp32.h>
 #include <iostream>
@@ -18,6 +18,7 @@ protected:
 
 	struct HandleCheck {
 		std::vector<char*> PSnapshot;
+		std::vector<char*> NSnapshot;
 		int PCount;
 	};
 	// Known third party applications
@@ -28,7 +29,6 @@ protected:
 		"thebestrat.exe",
 		"hitbox.exe"
 	};
-	HANDLE selfHandle = GetCurrentProcess();
 
 public:
 	ProcessCheck::HandleCheck check;
@@ -36,8 +36,8 @@ public:
 	bool EnumerateModules(DWORD);
 	bool EnumerateSnapshot();
 	bool IterateVector();
-	void HandleCount();
-	void PushSnapshot(DWORD);
+	void CheckHandleCount();
+	TCHAR* GetProcessName(DWORD);
 	void SetSnapshot();
 };
 #endif

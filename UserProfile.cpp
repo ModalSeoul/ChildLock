@@ -1,6 +1,6 @@
 #include "UserProfile.h"
 #include <iostream>
-#include <Windows.h>
+#include <afxwin.h>
 #include <Lmcons.h>
 #include <tchar.h>
 
@@ -31,7 +31,5 @@ bool UserProfile::CheckChild() {
 			return true;
 		}
 	}
-	else {
-		return false;
-	}
+	return false;
 }
