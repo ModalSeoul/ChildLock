@@ -1,6 +1,6 @@
 #include "UserProfile.h"
 #include <iostream>
-#include <afxwin.h>
+#include <Windows.h>
 #include <Lmcons.h>
 #include <tchar.h>
 

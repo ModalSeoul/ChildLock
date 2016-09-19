@@ -1,4 +1,4 @@
-#include <afxwin.h>
+#include <Windows.h>
 #include <tchar.h>
 #include <TlHelp32.h>
 #include <iostream>

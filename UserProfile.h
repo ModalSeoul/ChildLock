@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <afxwin.h>
+#include <Windows.h>
 
 using namespace std;
 

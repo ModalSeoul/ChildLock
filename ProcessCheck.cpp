@@ -1,5 +1,5 @@
 #include "ProcessCheck.h"
-#include <afxwin.h>
+#include <Windows.h>
 #include <stdio.h>
 #include <tchar.h>
 #include <Psapi.h>
@@ -71,7 +71,7 @@ bool ProcessCheck::EnumerateSnapshot() {
 	}
 
 	do {
-		PushSnapshot(pe32.th32ProcessID);
+		GetProcessName(pe32.th32ProcessID);
 		//_tprintf(TEXT("\n  Process ID        = 0x%08X"), pe32.th32ProcessID);
 		//_tprintf(TEXT("\n  Thread count      = %d"), pe32.cntThreads);
 		//_tprintf(TEXT("\n  Parent process ID = %0x%08X"), pe32.th32ParentProcessID);
