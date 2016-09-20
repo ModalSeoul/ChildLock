@@ -6,7 +6,6 @@
 #include <iostream>
 #include <Windows.h>
 #include <algorithm>
-#include <fstream>
 
 // Class declerations 
 UserProfile ZUser;
@@ -24,21 +23,14 @@ string GetUniqueIdentifier() {
 	string encryptMBID = ZCaesar.encrypt(MBID);
 	string encryptBIOSID = ZCaesar.encrypt(BIOSID);
 	string toReturn = encryptMBID;
-	toReturn += encryptBIOSID;
-	for (int i = 0; i < sizeof(toReturn); i++) {
-		if (!isalnum(toReturn[i]) || toReturn[i] == ' ')
-			toReturn.erase(i, 1);
-	}
+	toReturn += ":" + encryptBIOSID;
+	remove_if(toReturn.begin(), toReturn.end(), isspace);
 	return toReturn;
 }
 
 int main()
 {
-	ofstream baseboard;
-	baseboard.open("sig.txt");
 	string tmpSig = GetUniqueIdentifier();
-	baseboard << tmpSig;
-	baseboard.close();
 	cout << tmpSig << endl;
 	cin.ignore();
 	return 0;
