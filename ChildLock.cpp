@@ -6,19 +6,40 @@
 #include <iostream>
 #include <Windows.h>
 
+// Class declerations 
 UserProfile ZUser;
 ProcessCheck ZProcess;
 Felon ZFelon;
 Caesar ZCaesar;
 
-int main()
-{
-	std::string welp = ZCaesar.encrypt(ZFelon.CallWMIC("wmic bios get serialnumber"));
-	std::cout << ZCaesar.encrypt(welp) << std::endl;
-	//std::cout << ZFelon.CallWMIC("wmic bios get version") << std::endl;
-	//std::cout << ZFelon.CallWMIC("wmic bios get caption") << std::endl;
-	//std::cout << ZFelon.CallWMIC("wmic bios get description") << std::endl;
-	std::cin.ignore();
-	return 0;
+using namespace std;
+
+// Makes my life easier
+string StrAppend(
+	string str,
+	string append
+) {
+	return str + ":" + append + ":";
 }
 
+// TODO: Figure out a decent way to deallocate cleanly
+string* GetUniqueIdentifier() {
+	string toReturn = "";
+	string *MBID = new string(ZFelon.CallWMIC("wmic baseboard get serialnumber"));
+	string *BIOSID = new string(ZFelon.CallWMIC("wmic bios get serialnumber"));
+	string encryptMBID = ZCaesar.encrypt(*MBID);
+	string encryptBIOSID = ZCaesar.encrypt(*BIOSID);
+	toReturn += encryptMBID;
+	toReturn += encryptBIOSID;
+	cout << toReturn << endl;
+	return &toReturn;
+}
+
+int main()
+{
+	string *tmpSig = GetUniqueIdentifier();
+	// Send signature to server for storage & analysis
+	// delete
+	cin.ignore();
+	return 0;
+}
