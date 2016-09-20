@@ -133,8 +133,8 @@ TCHAR* ProcessCheck::GetProcessName(DWORD pId) {
 	if (NULL != hProc) {
 		HMODULE hMod;
 		DWORD cbNeeded;
-		if (EnumProcessModules(hProc, &hMod, sizeof(hMod),
-			&cbNeeded))
+		if (EnumProcessModules(hProc, &hMod,
+				sizeof(hMod),&cbNeeded))
 		{
 			GetModuleBaseName(hProc, hMod,
 				szName, sizeof(szName) / sizeof(TCHAR));
