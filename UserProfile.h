@@ -20,19 +20,22 @@ using namespace std;
 //    Call encrypt() and store value in pointer, use pointer
 //    to make comparison, immediately delete[] the pointer afterwards.
 //    Failure to do this will make the entire function moot.
-class UserProfile {
+class UserProfile
+{
 protected:
 	// To be replaced by SQL table to store children
 	vector<char*> CHILDREN = {
-		"Angeles Tagle", // "Koze" - wrote a shotbot
-		"Mike",          // Mike - wrote packet dropper and various mem edits.
+		"Angeles Tagle",
+		"Mike",
 	};
 	// Compare to 0, 1, 2 values from SQL table
-	enum h_Severity {
+	enum h_Severity
+	{
 		INSPECTION,
 		USER,
 		DEVELOPER
 	};
+
 public:
 	bool CheckChild();
 	bool IsChild(TCHAR*);

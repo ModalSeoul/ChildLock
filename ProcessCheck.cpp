@@ -8,7 +8,8 @@
 void printError(TCHAR* msg);
 
 
-void ProcessCheck::SetSnapshot() {
+void ProcessCheck::SetSnapshot()
+{
 	// Create quick 'snapshot' of process list
 	Snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 	// Grabbing the size of processes
@@ -16,27 +17,30 @@ void ProcessCheck::SetSnapshot() {
 }
 
 // Yes or no on this formatting? I'm unsure :|
-DWORD ProcessCheck::GetProcessId(
-	LPCTSTR pName
-) {
+DWORD ProcessCheck::GetProcessId(LPCTSTR pName)
+{
 	// Check CreateToolhelp call success
 	if (Snapshot == INVALID_HANDLE_VALUE)
 		SetSnapshot();
 
-	if (!Process32First(Snapshot, &pe32)) {
+	if (!Process32First(Snapshot, &pe32))
+	{
 		CloseHandle(Snapshot);
 		return 0;
 	}
 
-	do {
+	do
+	{
 #ifdef UNICODE
 		// Storing pId in header declared DWORD & returning
-		if (!lstrcmpiW(pe32.szExeFile, pName)) {
+		if (!lstrcmpiW(pe32.szExeFile, pName))
+		{
 			pId = pe32.th32ProcessID;
 			return pId;
-	}
+		}
 #else
-		if (!lstrcmpiA(pe32.szExeFile, pName)) {
+		if (!lstrcmpiA(pe32.szExeFile, pName))
+		{
 			pId = pe32.th32ProcessID;
 			EnumerateModules(pId);
 			return pId;
@@ -51,10 +55,13 @@ DWORD ProcessCheck::GetProcessId(
 	return 0;
 }
 
-bool ProcessCheck::IterateVector() {
-	for (auto& proc : ToCheck) {
+bool ProcessCheck::IterateVector()
+{
+	for (auto& proc : ToCheck)
+	{
 		DWORD tempCheck = GetProcessId(TEXT(proc));
-		if (tempCheck) {
+		if (tempCheck)
+		{
 			// TODO: This dude's running a process we dun like
 			return true;
 		}
@@ -63,14 +70,17 @@ bool ProcessCheck::IterateVector() {
 	return false;
 }
 
-bool ProcessCheck::EnumerateSnapshot() {
-	if (!Process32First(Snapshot, &pe32)) {
+bool ProcessCheck::EnumerateSnapshot()
+{
+	if (!Process32First(Snapshot, &pe32))
+	{
 		std::cout << "Failed, line 61(debug str)" << std::endl;
 		std::cout << GetLastError() << std::endl;
 		return false; // Previously closing handle
 	}
 
-	do {
+	do
+	{
 		GetProcessName(pe32.th32ProcessID);
 		//_tprintf(TEXT("\n  Process ID        = 0x%08X"), pe32.th32ProcessID);
 		//_tprintf(TEXT("\n  Thread count      = %d"), pe32.cntThreads);
@@ -82,21 +92,25 @@ bool ProcessCheck::EnumerateSnapshot() {
 
 
 // This returns this(http://i.imgur.com/qqfaDdk.png)
-bool ProcessCheck::EnumerateModules(DWORD pId) {
+bool ProcessCheck::EnumerateModules(DWORD pId)
+{
 	ModuleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, pId);
 
-	if (ModuleSnap == INVALID_HANDLE_VALUE) {
+	if (ModuleSnap == INVALID_HANDLE_VALUE)
+	{
 		printError(TEXT("CreateToolhelp32Snapshot (of modules)"));
 		return false;
 	}
 
 	me32.dwSize = sizeof(MODULEENTRY32);
-	if (!Module32First(ModuleSnap, &me32)) {
-		printError(TEXT("Module32First"));  // show cause of failure
+	if (!Module32First(ModuleSnap, &me32))
+	{
+		printError(TEXT("Module32First")); // show cause of failure
 		return false;
 	}
 
-	do {
+	do
+	{
 		_tprintf(TEXT("\n\n	  MODULE NAME:	%s"), me32.szModule);
 		_tprintf(TEXT("\n     Executable     = %s"), me32.szExePath);
 		_tprintf(TEXT("\n     Process ID     = 0x%08X"), me32.th32ProcessID);
@@ -108,49 +122,50 @@ bool ProcessCheck::EnumerateModules(DWORD pId) {
 	return true;
 }
 
-void ProcessCheck::CheckHandleCount() {
+void ProcessCheck::CheckHandleCount()
+{
 	DWORD szBuffer = NULL;
 	GetProcessHandleCount(GetCurrentProcess(), &szBuffer);
 	std::cout << "\nPreviously: " << check.PCount << "\nNow: " << szBuffer;
 
 	if (!szBuffer == NULL)
-		if (!check.PCount == szBuffer) {
-			
-			check.PCount = szBuffer;	// Update PCount 
-			SetSnapshot();				// Reset process snapshot
-			do {
+		if (!check.PCount == szBuffer)
+		{
+
+			check.PCount = szBuffer; // Update PCount
+			SetSnapshot(); // Reset process snapshot
+			do
+			{
 				check.NSnapshot.push_back((char*)pe32.th32ProcessID);
 			} while (Process32Next(Snapshot, &pe32));
 		}
 }
 
-TCHAR* ProcessCheck::GetProcessName(DWORD pId) {
+TCHAR* ProcessCheck::GetProcessName(DWORD pId)
+{
 	TCHAR szName[MAX_PATH] = TEXT("<unrecognized>");
-	HANDLE hProc = OpenProcess(PROCESS_QUERY_INFORMATION |
-		PROCESS_VM_READ,
-		FALSE, pId);
+	HANDLE hProc = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pId);
 
-	if (NULL != hProc) {
+	if (NULL != hProc)
+	{
 		HMODULE hMod;
 		DWORD cbNeeded;
-		if (EnumProcessModules(hProc, &hMod,
-				sizeof(hMod),&cbNeeded))
+		if (EnumProcessModules(hProc, &hMod, sizeof(hMod), &cbNeeded))
 		{
-			GetModuleBaseName(hProc, hMod,
-				szName, sizeof(szName) / sizeof(TCHAR));
+			GetModuleBaseName(hProc, hMod, szName, sizeof(szName) / sizeof(TCHAR));
 		}
 	}
 	return szName;
 }
 
-void printError(TCHAR* msg) {
+void printError(TCHAR* msg)
+{
 	DWORD eNum;
 	TCHAR sysMsg[256];
 	TCHAR* p;
 
 	eNum = GetLastError();
-	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-		NULL, eNum,
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, eNum,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
 		sysMsg, 256, NULL);
 
@@ -158,10 +173,11 @@ void printError(TCHAR* msg) {
 	p = sysMsg;
 	while ((*p > 31) || (*p == 9))
 		++p;
-	do { *p-- = 0; } while ((p >= sysMsg) &&
-		((*p == '.') || (*p < 33)));
+	do
+	{
+		*p-- = 0;
+	} while ((p >= sysMsg) && ((*p == '.') || (*p < 33)));
 
 	// Display the message
 	_tprintf(TEXT("\n  WARNING: %s failed with error %d (%s)"), msg, eNum, sysMsg);
 }
-

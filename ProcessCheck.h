@@ -7,7 +7,8 @@
 #ifndef PROCESSCHECKS_H
 #define PROCESSCHECKS_H
 
-class ProcessCheck {
+class ProcessCheck
+{
 protected:
 	HANDLE ProcessHandle = NULL;
 	DWORD pId = NULL;
@@ -16,19 +17,15 @@ protected:
 	MODULEENTRY32 me32;
 	PROCESSENTRY32 pe32 = { 0 };
 
-	struct HandleCheck {
+	struct HandleCheck
+	{
 		std::vector<char*> PSnapshot;
 		std::vector<char*> NSnapshot;
 		int PCount;
 	};
 	// Known third party applications
-	std::vector<LPCTSTR> ToCheck = {
-		"explorer.exe",
-		"freestyle gunz.exe",
-		"sb.exe",
-		"thebestrat.exe",
-		"hitbox.exe"
-	};
+	std::vector<LPCTSTR> ToCheck
+		= { "explorer.exe", "freestyle gunz.exe", "sb.exe", "thebestrat.exe", "hitbox.exe" };
 
 public:
 	ProcessCheck::HandleCheck check;
