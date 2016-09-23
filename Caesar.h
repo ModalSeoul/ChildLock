@@ -56,7 +56,7 @@ public:
 		for (int i = 0; i < to_switch.length(); i++)
 		{
 			char c[16];
-			sprintf(c, "%d", (int)to_switch[i]);
+			sprintf_s(c, "%d", (int)to_switch[i]);
 			switchedStr += c;
 			switchedStr += ' '; // I shouldn't have to make a new line for this but whatever.
 		}
