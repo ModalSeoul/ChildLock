@@ -9,6 +9,7 @@
 #include <fstream>
 #include <stdio.h>
 #include <conio.h>
+#include "Checksum.h"
 
 // Class declerations
 UserProfile ZUser;
@@ -17,25 +18,6 @@ Felon ZFelon;
 Caesar ZCaesar;
 
 using namespace std;
-
-string split(string str, string split)
-{
-	string builtStr = "";
-	for (auto i : str)
-	{
-		if (i == split[0] && i == split[1])
-		{
-			// It's 2 in the morning and this seems like a good idea
-			// - It is not a good idea but fuck I'm tired
-			for (int j = 0; i < sizeof(str); i++)
-			{
-				builtStr += str[i];
-			}
-		}
-
-	}
-	return builtStr;
-}
 
 // TODO: Figure out a decent way to deallocate cleanly
 string GetUniqueIdentifier()
@@ -63,17 +45,11 @@ string GetUniqueIdentifier()
 	return toReturn;
 }
 
-int test(char i)
-{
-	return (int)i;
-}
-
 int main()
 {
-	// FUCK I'M GOING TO BED I AM SO TIRED
-	cout << ZFelon.CallWMIC("wmic baseboard get serialnumber") << endl;
-	cout << GetUniqueIdentifier() << endl;
-
+	//cout << ZFelon.CallWMIC("wmic baseboard get serialnumber") << endl;
+	//cout << GetUniqueIdentifier() << endl;
+	cout << GetFileChecksum("sig.txt") << endl;
 	cin.ignore();
 	return 0;
 }

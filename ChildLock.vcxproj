@@ -152,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Caesar.h" />
+    <ClInclude Include="Checksum.h" />
     <ClInclude Include="FelonAlert.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
