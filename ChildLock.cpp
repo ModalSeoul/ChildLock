@@ -31,9 +31,8 @@ string GetUniqueIdentifier()
 	int i = 0;
 	while (i < len)
 	{
-		if (
-			toReturn[i] == ' '
-		) {
+		if (toReturn[i] == ' ')
+		{
 			cout << toReturn[i] << endl;
 			toReturn.erase(i, 1);
 			len--;
