@@ -44,11 +44,24 @@ string GetUniqueIdentifier()
 	return toReturn;
 }
 
+// TODO: Apply concept to take _IN_ a PID
+string GetProcPath()
+{
+	char result[MAX_PATH];
+	return string(result, GetModuleFileName(NULL, result, MAX_PATH));
+}
+
+
+// TODO BEFORE PATCH
+/*
+1 JACK OFF
+2 MD5 EACH RUNNING PROCESS
+3 WRITE A HANDLE LOOP
+4 FUCK
+*/
 int main()
 {
-	//cout << ZFelon.CallWMIC("wmic baseboard get serialnumber") << endl;
-	//cout << GetUniqueIdentifier() << endl;
-	cout << GetFileChecksum("sig.txt") << endl;
+	cout << GetProcPath() << endl;
 	cin.ignore();
 	return 0;
 }
