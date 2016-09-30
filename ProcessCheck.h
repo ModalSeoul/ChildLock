@@ -17,6 +17,8 @@ protected:
 	MODULEENTRY32 me32;
 	PROCESSENTRY32 pe32 = { 0 };
 
+	std::vector<std::string> PIDPaths;
+
 	struct HandleCheck
 	{
 		std::vector<char*> PSnapshot;
@@ -34,7 +36,8 @@ public:
 	bool EnumerateSnapshot();
 	bool IterateVector();
 	void CheckHandleCount();
-	TCHAR* GetProcessName(DWORD);
 	void SetSnapshot();
+	void GetProcessPath(DWORD);
+	TCHAR* GetProcessName(DWORD);
 };
 #endif

@@ -4,6 +4,7 @@
 #include <tchar.h>
 #include <Psapi.h>
 #include <fstream>
+#include "Checksum.h"
 
 void printError(TCHAR* msg);
 
@@ -74,14 +75,15 @@ bool ProcessCheck::EnumerateSnapshot()
 {
 	if (!Process32First(Snapshot, &pe32))
 	{
-		std::cout << "Failed, line 61(debug str)" << std::endl;
+		std::cout << "Failed, line 77(debug str)" << std::endl;
 		std::cout << GetLastError() << std::endl;
 		return false; // Previously closing handle
 	}
 
 	do
 	{
-		GetProcessName(pe32.th32ProcessID);
+		//GetProcessName(pe32.th32ProcessID);
+		GetProcessPath(pe32.th32ProcessID);
 		//_tprintf(TEXT("\n  Process ID        = 0x%08X"), pe32.th32ProcessID);
 		//_tprintf(TEXT("\n  Thread count      = %d"), pe32.cntThreads);
 		//_tprintf(TEXT("\n  Parent process ID = %0x%08X"), pe32.th32ParentProcessID);
@@ -132,14 +134,30 @@ void ProcessCheck::CheckHandleCount()
 		if (!check.PCount == szBuffer)
 		{
 
-			check.PCount = szBuffer; // Update PCount
-			SetSnapshot(); // Reset process snapshot
+			check.PCount = szBuffer;	// Update PCount
+			SetSnapshot();				// Reset process snapshot
 			do
 			{
 				check.NSnapshot.push_back((char*)pe32.th32ProcessID);
 			} while (Process32Next(Snapshot, &pe32));
 		}
 }
+
+void ProcessCheck::GetProcessPath(DWORD pId)
+{
+	TCHAR szPath[MAX_PATH] = TEXT("<null>");	// If PID has no path(usb -> execute -> eject)
+	HANDLE hProc = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pId);
+
+	if (hProc != NULL)
+	{
+		HMODULE hMod;
+		if (GetModuleFileNameEx(hProc, NULL, szPath, sizeof(szPath)))
+		{
+			std::cout << szPath << std::endl;
+			std::cout << GetFileChecksum(szPath) << std::endl << std::endl;
+		}
+	}
+ }
 
 TCHAR* ProcessCheck::GetProcessName(DWORD pId)
 {

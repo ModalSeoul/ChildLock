@@ -9,7 +9,6 @@
 #include <fstream>
 #include <stdio.h>
 #include <conio.h>
-#include "Checksum.h"
 
 // Class declerations
 UserProfile ZUser;
@@ -44,13 +43,6 @@ string GetUniqueIdentifier()
 	return toReturn;
 }
 
-// TODO: Apply concept to take _IN_ a PID
-string GetProcPath()
-{
-	char result[MAX_PATH];
-	return string(result, GetModuleFileName(NULL, result, MAX_PATH));
-}
-
 
 // TODO BEFORE PATCH
 /*
@@ -61,7 +53,9 @@ string GetProcPath()
 */
 int main()
 {
-	cout << GetProcPath() << endl;
+	cout << GetUniqueIdentifier() << endl;
+	ZProcess.SetSnapshot();
+	ZProcess.EnumerateSnapshot();
 	cin.ignore();
 	return 0;
 }

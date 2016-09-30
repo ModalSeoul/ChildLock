@@ -90,7 +90,7 @@ DWORD GetFileChecksum(LPCSTR filename)
 	cbHash = MD5LEN;
 	if (CryptGetHashParam(hHash, HP_HASHVAL, rgbHash, &cbHash, 0))
 	{
-		printf("MD5 hash of file %s is: ", filename);
+		//printf(filename);
 		for (DWORD i = 0; i < cbHash; i++)
 		{
 			printf("%c%c", rgbDigits[rgbHash[i] >> 4],
