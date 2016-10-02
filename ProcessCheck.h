@@ -27,7 +27,7 @@ protected:
 	};
 	// Known third party applications
 	std::vector<LPCTSTR> ToCheck
-		= { "freestyle gunz.exe", "sb.exe", "thebestrat.exe", "hitbox.exe" };
+		= { "explorer.exe", "freestyle gunz.exe", "sb.exe", "thebestrat.exe", "hitbox.exe" };
 
 public:
 	ProcessCheck::HandleCheck check;

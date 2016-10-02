@@ -27,6 +27,7 @@ protected:
 	vector<char*> CHILDREN = {
 		"Angeles Tagle",
 		"Mike",
+		"Modal"
 	};
 	// Compare to 0, 1, 2 values from SQL table
 	enum h_Severity

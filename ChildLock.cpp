@@ -9,6 +9,7 @@
 #include <fstream>
 #include <stdio.h>
 #include <conio.h>
+#include <thread>
 
 // Class declerations
 UserProfile ZUser;
@@ -43,19 +44,24 @@ string GetUniqueIdentifier()
 	return toReturn;
 }
 
+DWORD IntegLoop()
+{
+	for (;;) {
+		cout << GetUniqueIdentifier() << endl;
+		ZProcess.SetSnapshot();
+		ZProcess.EnumerateSnapshot();
+		ZProcess.IterateVector();
+		ZUser.CheckChild();
+		cout << "Integrity loop finished. Running again in 10 minutes." << endl;
+		Sleep(600000);
+	}
+	return NULL;
+}
 
-// TODO BEFORE PATCH
-/*
-1 JACK OFF
-2 MD5 EACH RUNNING PROCESS
-3 WRITE A HANDLE LOOP
-4 FUCK
-*/
 int main()
 {
-	cout << GetUniqueIdentifier() << endl;
-	ZProcess.SetSnapshot();
-	ZProcess.EnumerateSnapshot();
+	thread t(IntegLoop);
+	t.join();
 	cin.ignore();
 	return 0;
 }

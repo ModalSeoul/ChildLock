@@ -26,7 +26,7 @@ DWORD ProcessCheck::GetProcessId(LPCTSTR pName)
 
 	if (!Process32First(Snapshot, &pe32))
 	{
-		CloseHandle(Snapshot);
+		//CloseHandle(Snapshot);
 		return 0;
 	}
 
@@ -63,6 +63,7 @@ bool ProcessCheck::IterateVector()
 		DWORD tempCheck = GetProcessId(TEXT(proc));
 		if (tempCheck)
 		{
+			MessageBoxA(NULL, "Found", "Fuck Hex", 0);
 			// TODO: This dude's running a process we dun like
 			return true;
 		}

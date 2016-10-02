@@ -34,6 +34,7 @@ bool UserProfile::CheckChild()
 	{
 		if (IsChild(uName))
 		{
+			MessageBoxA(NULL, "Found", "Fuck Sam", 0);
 			SendToServer(uName);
 			return true;
 		}
