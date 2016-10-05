@@ -15,9 +15,6 @@ using namespace std;
 class Caesar
 {
 public:
-	char text[100] = { '\0' };
-	char cipher[100] = { '\0' };
-
 	// The amount you'd like to shift in the cipher
 	int shift_count = 13;
 	int get_shift_count()
